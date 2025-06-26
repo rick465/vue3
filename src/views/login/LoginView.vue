@@ -58,6 +58,8 @@
           size="large"
           :loading="loading"
           :disabled="loading"
+          @keyup.enter="handleSubmit"
+
           class="w-full mt-2 bg-blue-500 hover:bg-blue-600 border-0"
           @click="handleSubmit"
         >

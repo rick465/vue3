@@ -1,15 +1,15 @@
 <template>
     <div class="flex flex-col gap-6 w-full min-w-0">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">个人资料</h1>
-        <p class="mt-1 text-sm text-gray-500">管理您的个人信息和账户设置</p>
+        <h1 class="text-2xl font-bold text-white-100">個人資料</h1>
+        <p class="mt-1 text-sm text-gray-500">管理您的個人資訊和帳戶設定</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
         <!-- 个人信息卡片 -->
         <div class="lg:col-span-2">
           <div class="card bg-gray-800 text-gray-100">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">基本信息</h3>
+            <h3 class="text-lg font-medium text-white-100 mb-4">基本資訊</h3>
             <n-form
               ref="formRef"
               :model="form"
@@ -19,35 +19,35 @@
               require-mark-placement="right-hanging"
             >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <n-form-item label="用户名" path="username">
+                <n-form-item label="用戶名" path="username">
                   <n-input v-model:value="form.username" disabled />
                 </n-form-item>
 
-                <n-form-item label="邮箱" path="email">
-                  <n-input v-model:value="form.email" placeholder="请输入邮箱" />
+                <n-form-item label="郵箱" path="email">
+                  <n-input v-model:value="form.email" placeholder="請輸入郵箱" />
                 </n-form-item>
 
-                <n-form-item label="真实姓名" path="realName">
-                  <n-input v-model:value="form.realName" placeholder="请输入真实姓名" />
+                <n-form-item label="真實姓名" path="realName">
+                  <n-input v-model:value="form.realName" placeholder="請輸入真實姓名" />
                 </n-form-item>
 
-                <n-form-item label="手机号码" path="phone">
-                  <n-input v-model:value="form.phone" placeholder="请输入手机号码" />
+                <n-form-item label="手機號碼" path="phone">
+                  <n-input v-model:value="form.phone" placeholder="請輸入手機號碼" />
                 </n-form-item>
               </div>
 
-              <n-form-item label="个人简介" path="bio">
+              <n-form-item label="個人簡介" path="bio">
                 <n-input
                   v-model:value="form.bio"
                   type="textarea"
-                  placeholder="请输入个人简介"
+                  placeholder="請輸入個人簡介"
                   :rows="3"
                 />
               </n-form-item>
 
               <div class="flex justify-end">
                 <n-button type="primary" @click="saveProfile">
-                  保存信息
+                  儲存資訊
                 </n-button>
               </div>
             </n-form>
@@ -64,27 +64,27 @@
                 size="large"
                 class="mx-auto mb-4"
               />
-              <h3 class="text-lg font-medium text-gray-900">{{ userStore.user?.username }}</h3>
+              <h3 class="text-lg font-medium text-white-100">{{ userStore.user?.username }}</h3>
               <p class="text-sm text-gray-500">{{ userStore.user?.role }}</p>
               <n-button class="mt-4" size="small">
-                更换头像
+                更換頭像
               </n-button>
             </div>
           </div>
 
           <div class="card bg-gray-800 text-gray-100 w-full">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">账户信息</h3>
+            <h3 class="text-lg font-medium text-white-100 mb-4">帳戶資訊</h3>
             <div class="space-y-3">
               <div class="flex justify-between">
-                <span class="text-sm text-gray-500">用户ID</span>
+                <span class="text-sm text-gray-500">用戶ID</span>
                 <span class="text-sm font-medium">{{ userStore.user?.id }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-sm text-gray-500">注册时间</span>
+                <span class="text-sm text-gray-500">註冊時間</span>
                 <span class="text-sm font-medium">{{ formatDate(userStore.user?.createdAt) }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-sm text-gray-500">最后登录</span>
+                <span class="text-sm text-gray-500">最後登入</span>
                 <span class="text-sm font-medium">{{ formatDate(userStore.user?.lastLoginAt) }}</span>
               </div>
             </div>
@@ -93,8 +93,8 @@
       </div>
 
       <!-- 修改密码 -->
-      <div class="card">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">修改密码</h3>
+      <div class="card bg-gray-800 text-white-100">
+        <h3 class="text-lg font-medium text-white-100 mb-4">修改密碼</h3>
         <n-form
           ref="passwordFormRef"
           :model="passwordForm"
@@ -104,37 +104,37 @@
           require-mark-placement="right-hanging"
         >
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <n-form-item label="当前密码" path="currentPassword">
+            <n-form-item label="當前密碼" path="currentPassword">
               <n-input
                 v-model:value="passwordForm.currentPassword"
                 type="password"
-                placeholder="请输入当前密码"
+                placeholder="請輸入當前密碼"
                 show-password-on="click"
               />
             </n-form-item>
 
-            <n-form-item label="新密码" path="newPassword">
+            <n-form-item label="新密碼" path="newPassword">
               <n-input
                 v-model:value="passwordForm.newPassword"
                 type="password"
-                placeholder="请输入新密码"
+                placeholder="請輸入新密碼"
                 show-password-on="click"
               />
             </n-form-item>
 
-            <n-form-item label="确认密码" path="confirmPassword">
+            <n-form-item label="確認密碼" path="confirmPassword">
               <n-input
                 v-model:value="passwordForm.confirmPassword"
                 type="password"
-                placeholder="请再次输入新密码"
+                placeholder="請再次輸入新密碼"
                 show-password-on="click"
               />
             </n-form-item>
           </div>
 
           <div class="flex justify-end">
-            <n-button type="primary" @click="changePassword">
-              修改密码
+            <n-button type="primary" @click="handleChangePassword">
+              修改密碼
             </n-button>
           </div>
         </n-form>
@@ -143,17 +143,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
-import MainLayout from '@/components/layout/MainLayout.vue'
 import { useUserStore } from '@/stores/user'
+import { updateUser, changePassword as changePasswordApi } from '@/api'
 
 const message = useMessage()
 const userStore = useUserStore()
 
 const form = reactive({
-  username: userStore.user?.username || '',
-  email: userStore.user?.email || '',
+  username: '',
+  email: '',
   realName: '',
   phone: '',
   bio: ''
@@ -161,8 +161,8 @@ const form = reactive({
 
 const rules = {
   email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
-    { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+    { required: true, message: '請輸入郵箱', trigger: 'blur' },
+    { type: 'email', message: '請輸入正確的郵箱格式', trigger: 'blur' }
   ]
 }
 
@@ -174,18 +174,18 @@ const passwordForm = reactive({
 
 const passwordRules = {
   currentPassword: [
-    { required: true, message: '请输入当前密码', trigger: 'blur' }
+    { required: true, message: '請輸入當前密碼', trigger: 'blur' }
   ],
   newPassword: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    { min: 6, message: '密码长度不能少于6位', trigger: 'blur' }
+    { required: true, message: '請輸入新密碼', trigger: 'blur' },
+    { min: 6, message: '密碼長度不能少於6位', trigger: 'blur' }
   ],
   confirmPassword: [
-    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+    { required: true, message: '請再次輸入新密碼', trigger: 'blur' },
     {
       validator: (_rule: unknown, value: string) => {
         if (value !== passwordForm.newPassword) {
-          return new Error('两次输入的密码不一致')
+          return new Error('兩次輸入的密碼不一致')
         }
       },
       trigger: 'blur'
@@ -198,14 +198,62 @@ const formatDate = (dateString?: string) => {
   return new Date(dateString).toLocaleDateString()
 }
 
-const saveProfile = () => {
-  message.success('个人信息保存成功')
+const saveProfile = async () => {
+  try {
+    const res = await updateUser({
+      username: form.username,
+      email: form.email,
+      realName: form.realName,
+      phone: form.phone,
+      bio: form.bio
+    })
+    // 更新 userStore 及 localStorage
+    userStore.user = res.data
+    localStorage.setItem('user', JSON.stringify(res.data))
+    // 重新設置 form
+    form.username = res.data.username || ''
+    form.email = res.data.email || ''
+    form.realName = res.data.realName || ''
+    form.phone = res.data.phone || ''
+    form.bio = res.data.bio || ''
+    message.success('個人資訊儲存成功')
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      message.error(e.message || '儲存失敗')
+    } else {
+      message.error('儲存失敗')
+    }
+  }
 }
 
-const changePassword = () => {
-  message.success('密码修改成功')
-  passwordForm.currentPassword = ''
-  passwordForm.newPassword = ''
-  passwordForm.confirmPassword = ''
+const handleChangePassword = async () => {
+  try {
+    await changePasswordApi(
+      form.username,
+      passwordForm.currentPassword,
+      passwordForm.newPassword
+    )
+    message.success('密碼修改成功')
+    passwordForm.currentPassword = ''
+    passwordForm.newPassword = ''
+    passwordForm.confirmPassword = ''
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      message.error(e.message || '密碼修改失敗')
+    } else {
+      message.error('密碼修改失敗')
+    }
+  }
 }
+
+onMounted(() => {
+  userStore.initAuth()
+  if (userStore.user) {
+    form.username = userStore.user.username || ''
+    form.email = userStore.user.email || ''
+    form.realName = userStore.user.realName || ''
+    form.phone = userStore.user.phone || ''
+    form.bio = userStore.user.bio || ''
+  }
+})
 </script>

@@ -1,22 +1,22 @@
 <template>
-  <div class="flex flex-col gap-6 w-full min-w-0">
+  <div class="flex flex-col gap-6 w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- 页面标题和操作按钮 -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-4">
       <div>
-        <p class="mt-1 text-sm text-gray-500">管理系统中的所有角色</p>
+        <p class="mt-1 text-sm text-gray-400">管理所有角色及其權限</p>
       </div>
-      <n-button type="primary" @click="showCreateModal = true">
+      <n-button type="primary" @click="showCreateModal = true" class="w-full md:w-auto">
         <template #icon>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
         </template>
-        创建角色
+        新增角色
       </n-button>
     </div>
 
     <!-- 角色列表 -->
-    <div class="card bg-gray-800 text-gray-100 w-full">
+    <div class="card bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-full">
       <n-data-table
         :columns="columns"
         :data="roles"
@@ -77,6 +77,10 @@
           </div>
         </n-checkbox-group>
       </n-form-item>
+
+      <n-form-item label="密碼" path="password">
+        <n-input v-model:value="form.password" type="password" placeholder="請輸入密碼" />
+      </n-form-item>
     </n-form>
 
     <template #footer>
@@ -88,12 +92,48 @@
       </div>
     </template>
   </n-modal>
+
+  <!-- 编辑角色模态框 -->
+  <n-modal v-model:show="showEditModal" preset="card" title="編輯角色" style="width: 600px">
+    <n-form :model="editForm" :rules="rules" label-placement="left" label-width="auto" require-mark-placement="right-hanging">
+      <n-form-item label="角色名稱" path="name">
+        <n-input v-model:value="editForm.name" placeholder="請輸入角色名稱" />
+      </n-form-item>
+      <n-form-item label="角色代碼" path="code">
+        <n-input v-model:value="editForm.code" placeholder="請輸入角色代碼" />
+      </n-form-item>
+      <n-form-item label="描述" path="description">
+        <n-input v-model:value="editForm.description" type="textarea" placeholder="請輸入角色描述" :rows="3" />
+      </n-form-item>
+      <n-form-item label="權限" path="permissions">
+        <n-checkbox-group v-model:value="editForm.permissions">
+          <div class="grid grid-cols-2 gap-2">
+            <n-checkbox value="user:read">用戶查看</n-checkbox>
+            <n-checkbox value="user:write">用戶編輯</n-checkbox>
+            <n-checkbox value="role:read">角色查看</n-checkbox>
+            <n-checkbox value="role:write">角色編輯</n-checkbox>
+            <n-checkbox value="permission:read">權限查看</n-checkbox>
+            <n-checkbox value="permission:write">權限編輯</n-checkbox>
+          </div>
+        </n-checkbox-group>
+      </n-form-item>
+      <n-form-item label="密碼" path="password">
+        <n-input v-model:value="editForm.password" type="password" placeholder="如需修改請輸入新密碼" />
+      </n-form-item>
+    </n-form>
+    <template #footer>
+      <div class="flex justify-end space-x-2">
+        <n-button @click="showEditModal = false">取消</n-button>
+        <n-button type="primary" @click="handleUpdateRole">儲存</n-button>
+      </div>
+    </template>
+  </n-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, h } from 'vue'
 import { useMessage } from 'naive-ui'
-import { NButton, NTag, NSpace, NPopconfirm, NCheckboxGroup, NCheckbox } from 'naive-ui'
+import { NButton, NTag, NSpace, NCheckboxGroup, NCheckbox } from 'naive-ui'
 import BasePagination from '@/components/common/BasePagination.vue'
 import { getRoles, createRole } from '@/api'
 import type { Role, Pagination } from '@/types'
@@ -103,6 +143,7 @@ const message = useMessage()
 const loading = ref(false)
 const submitting = ref(false)
 const showCreateModal = ref(false)
+const showEditModal = ref(false)
 const currentPage = ref(1)
 const pageSize = ref(10)
 
@@ -118,7 +159,17 @@ const form = reactive({
   name: '',
   code: '',
   description: '',
-  permissions: [] as string[]
+  permissions: [] as string[],
+  password: ''
+})
+
+const editForm = reactive({
+  id: null as number | null,
+  name: '',
+  code: '',
+  description: '',
+  permissions: [] as string[],
+  password: ''
 })
 
 const rules = {
@@ -130,6 +181,10 @@ const rules = {
   ],
   description: [
     { required: true, message: '请输入角色描述', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密碼', trigger: 'blur' },
+    { min: 6, message: '密碼長度不能少於6位', trigger: 'blur' }
   ]
 }
 
@@ -160,20 +215,7 @@ const columns = [
           h(NButton, {
             size: 'small',
             onClick: () => handleEditRole(row)
-          }, { default: () => '编辑' }),
-          h(NButton, {
-            size: 'small',
-            onClick: () => handleViewPermissions(row)
-          }, { default: () => '权限' }),
-          h(NPopconfirm, {
-            onPositiveClick: () => handleDeleteRole(row.id)
-          }, {
-            trigger: () => h(NButton, {
-              size: 'small',
-              type: 'error'
-            }, { default: () => '删除' }),
-            default: () => '确定要删除这个角色吗？'
-          })
+          }, { default: () => '編輯' })
         ]
       })
     }
@@ -217,7 +259,8 @@ const handleCreateRole = async () => {
       name: form.name,
       code: form.code,
       description: form.description,
-      permissions: form.permissions
+      permissions: form.permissions,
+      password: form.password
     })
     message.success('角色创建成功')
     showCreateModal.value = false
@@ -226,6 +269,7 @@ const handleCreateRole = async () => {
     form.code = ''
     form.description = ''
     form.permissions = []
+    form.password = ''
     loadRoles()
   } catch (err) {
     if (err?.message) message.error(err.message)
@@ -238,15 +282,43 @@ const handleCreateRole = async () => {
 }
 
 const handleEditRole = (role: Role) => {
-  message.info(`编辑角色: ${role.name}`)
+  editForm.id = role.id
+  editForm.name = role.name
+  editForm.code = role.code
+  editForm.description = role.description
+  editForm.permissions = Array.isArray(role.permissions) ? [...role.permissions] : []
+  editForm.password = ''
+  showEditModal.value = true
 }
 
-const handleViewPermissions = (role: Role) => {
-  message.info(`查看角色权限: ${role.name}`)
-}
-
-const handleDeleteRole = (roleId: number) => {
-  message.success(`删除角色 ID: ${roleId}`)
+const handleUpdateRole = async () => {
+  // mock 更新角色到 localStorage
+  const roles: Role[] = JSON.parse(localStorage.getItem('mockRoles') || 'null') || []
+  const idx = roles.findIndex(r => r.id === editForm.id)
+  if (idx !== -1) {
+    roles[idx] = {
+      ...roles[idx],
+      name: editForm.name,
+      code: editForm.code,
+      description: editForm.description,
+      permissions: [...editForm.permissions]
+    }
+    localStorage.setItem('mockRoles', JSON.stringify(roles))
+  }
+  // mock 更新 user 密碼與權限
+  if (editForm.id) {
+    const users = JSON.parse(localStorage.getItem('mockUsers') || 'null') || []
+    const user = users.find((u) => u.role === roles[idx].name)
+    if (user) {
+      user.role = editForm.name
+      user.permissions = [...editForm.permissions]
+      if (editForm.password && editForm.password.length >= 6) {
+        user.password = editForm.password
+      }
+      localStorage.setItem('mockUsers', JSON.stringify(users))
+    }
+  }
+  showEditModal.value = false
   loadRoles()
 }
 

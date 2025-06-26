@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col gap-6 w-full min-w-0">
+  <div class="flex flex-col gap-6 w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- 页面标题 -->
     <div>
       <p class="mt-1 text-sm text-gray-500">管理系统配置和参数</p>
     </div>
 
     <!-- 设置选项卡 -->
-    <div class="card bg-gray-800 text-gray-100 w-full">
+    <div class="card bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-full">
       <n-tabs type="line" animated>
         <n-tab-pane name="general" tab="基本设置">
-          <div class="space-y-6">
+          <div class="space-y-6 bg-black text-gray-100 dark:bg-gray-800 dark:text-gray-100 p-6 rounded-lg">
             <n-form
               ref="generalFormRef"
               :model="generalForm"
@@ -53,7 +53,7 @@
         </n-tab-pane>
 
         <n-tab-pane name="security" tab="安全设置">
-          <div class="space-y-6">
+          <div class="space-y-6 bg-black text-gray-100 dark:bg-gray-800 dark:text-gray-100 p-6 rounded-lg">
             <n-form
               ref="securityFormRef"
               :model="securityForm"
@@ -114,7 +114,7 @@
         </n-tab-pane>
 
         <n-tab-pane name="notification" tab="通知设置">
-          <div class="space-y-6">
+          <div class="space-y-6 bg-black text-gray-100 dark:bg-gray-800 dark:text-gray-100 p-6 rounded-lg">
             <n-form
               ref="notificationFormRef"
               :model="notificationForm"
@@ -161,8 +161,8 @@
         </n-tab-pane>
 
         <n-tab-pane name="backup" tab="备份设置">
-          <div class="space-y-6">
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div class="space-y-6 bg-black text-gray-100 dark:bg-gray-800 dark:text-gray-100 p-6 rounded-lg">
+            <div class="bg-blue-900 border border-blue-700 rounded-lg p-4 dark:bg-blue-50 dark:border-blue-200 dark:text-blue-800">
               <div class="flex">
                 <div class="flex-shrink-0">
                   <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,8 +170,8 @@
                   </svg>
                 </div>
                 <div class="ml-3">
-                  <h3 class="text-sm font-medium text-blue-800">备份提醒</h3>
-                  <div class="mt-2 text-sm text-blue-700">
+                  <h3 class="text-sm font-medium text-blue-200 dark:text-blue-800">备份提醒</h3>
+                  <div class="mt-2 text-sm text-blue-100 dark:text-blue-700">
                     <p>定期备份系统数据可以防止数据丢失。建议每周进行一次完整备份。</p>
                   </div>
                 </div>

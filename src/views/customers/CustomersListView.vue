@@ -3,7 +3,18 @@
     <BaseCard>
       <!-- 標題插槽 -->
       <template #header>
-        <h2 class="text-2xl font-bold">客戶列表</h2>
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold">客戶列表</h2>
+          <div class="flex items-center gap-4">
+            <!-- 使用計數器 composable -->
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+              操作次數: {{ counter.count }}
+              <button @click="counter.increment" class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs">
+                +1
+              </button>
+            </div>
+          </div>
+        </div>
       </template>
 
       <!-- 搜索和篩選區域 -->
@@ -29,6 +40,16 @@
         <p>總客戶數：{{ totalCustomers }}</p>
         <p>當前頁：{{ currentPage }} / {{ pagination.totalPages }}</p>
         <p>搜索結果：{{ filteredCustomers.length }} 個</p>
+        <!-- 使用 localStorage composable -->
+        <p>上次訪問：{{ lastVisitTime }}</p>
+      </div>
+
+      <!-- 錯誤狀態 -->
+      <div v-if="apiError" class="mb-4 p-4 bg-red-50 dark:bg-red-900 rounded text-red-700 dark:text-red-300">
+        <p>錯誤：{{ apiError }}</p>
+        <button @click="retryLoad" class="mt-2 px-3 py-1 bg-red-500 text-white rounded text-sm">
+          重試
+        </button>
       </div>
 
       <!-- 加載狀態 -->
@@ -105,19 +126,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { NDataTable, NModal, NForm, NFormItem, NInput, NSelect, NButton } from 'naive-ui'
 import BasePagination from '@/components/common/BasePagination.vue'
 import SearchInput from '@/components/common/SearchInput.vue'
 import BaseCard from '@/components/common/BaseCard.vue'
 import { useCustomers } from '@/composables/useCustomers'
-import { usePageStore } from '@/stores/page'
-import { useRoute } from 'vue-router'
+import { useCounter } from '@/composables/useCounter'
+import { useLocalStorage } from '@/composables/useLocalStorage'
+import { useApi } from '@/composables/useApi'
 
-const route = useRoute()
-const pageStore = usePageStore()
-
-// 使用 customers composable
+// 使用多個 composables
 const {
   loading,
   currentPage,
@@ -136,20 +155,17 @@ const {
   addCustomer
 } = useCustomers({ initialPageSize: 10 })
 
-// 切換 Tab/onMounted 時同步 pageStore 狀態到 composable
-function syncPageState() {
-  const { page, search = '' } = pageStore.getPageState(route.fullPath)
-  currentPage.value = page
-  searchKeyword.value = search
-  loadCustomers()
-}
+// 使用計數器 composable
+const counter = useCounter(0)
 
-onMounted(syncPageState)
-watch(() => route.fullPath, syncPageState)
+// 使用 localStorage composable
+const { value: lastVisitTime } = useLocalStorage('lastVisitTime', new Date().toLocaleString())
 
-// 監聽 currentPage, searchKeyword 變化，存到 pageStore
-watch([currentPage, searchKeyword], ([page, search]) => {
-  pageStore.setPageState(route.fullPath, { page, search })
+// 使用 API composable 來處理錯誤
+const { error: apiError } = useApi({
+  onError: (error) => {
+    console.error('API Error:', error)
+  }
 })
 
 // 模態框狀態
@@ -207,5 +223,21 @@ const handleAddCustomer = () => {
 
   // 關閉模態框
   showAddModal.value = false
+
+  // 增加操作計數
+  counter.increment()
 }
+
+// 重試加載
+const retryLoad = () => {
+  loadCustomers()
+}
+
+onMounted(() => {
+  // 更新最後訪問時間
+  lastVisitTime.value = new Date().toLocaleString()
+
+  // 加載客戶數據
+  loadCustomers()
+})
 </script>

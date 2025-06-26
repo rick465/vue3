@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-6 w-full min-w-0">
+  <div class="flex flex-col gap-6 w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- 页面标题和操作按钮 -->
     <div class="flex items-center justify-between">
       <div>
@@ -16,7 +16,7 @@
     </div>
 
     <!-- 权限列表 -->
-    <div class="card bg-gray-800 text-gray-100 w-full">
+    <div class="card bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-full">
       <n-data-table
         :columns="columns"
         :data="permissions"

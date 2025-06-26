@@ -22,6 +22,27 @@ const router = createRouter({
           component: () => import('@/views/dashboard/DashboardView.vue'),
           meta: { requiresAuth: true }
         },
+        // 客戶管理
+        {
+          path: 'customers',
+          name: 'customers',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'list',
+              name: 'customers-list',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '客戶列表' }
+            },
+            {
+              path: 'tags',
+              name: 'customers-tags',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '客戶分組' }
+            }
+          ]
+        },
+        // 用戶管理
         {
           path: 'users',
           name: 'users',
@@ -38,32 +59,174 @@ const router = createRouter({
               name: 'users-logs',
               component: () => import('@/views/users/UsersLogsView.vue'),
               meta: { requiresAuth: true }
+            },
+            {
+              path: 'roles',
+              name: 'users-roles',
+              component: () => import('@/views/users/RolesView.vue'),
+              meta: { requiresAuth: true, permission: 'role:read' }
             }
           ]
         },
+        // 訂單管理
         {
-          path: 'roles',
-          name: 'roles',
-          component: () => import('@/views/roles/RolesView.vue'),
-          meta: { requiresAuth: true, permission: 'role:read' }
+          path: 'orders',
+          name: 'orders',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'list',
+              name: 'orders-list',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '訂單列表' }
+            },
+            {
+              path: 'stats',
+              name: 'orders-stats',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '訂單統計' }
+            }
+          ]
         },
+        // 商品管理
         {
-          path: 'permissions',
-          name: 'permissions',
-          component: () => import('@/views/permissions/PermissionsView.vue'),
-          meta: { requiresAuth: true, permission: 'permission:read' }
+          path: 'products',
+          name: 'products',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'list',
+              name: 'products-list',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '商品列表' }
+            },
+            {
+              path: 'categories',
+              name: 'products-categories',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '分類管理' }
+            }
+          ]
         },
+        // 文件管理
+        {
+          path: 'files',
+          name: 'files',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'list',
+              name: 'files-list',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '文件列表' }
+            },
+            {
+              path: 'upload',
+              name: 'files-upload',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '文件上傳' }
+            }
+          ]
+        },
+        // 消息中心
+        {
+          path: 'notifications',
+          name: 'notifications',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'list',
+              name: 'notifications-list',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '消息列表' }
+            },
+            {
+              path: 'announcements',
+              name: 'notifications-announcements',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '公告管理' }
+            }
+          ]
+        },
+        // 操作日誌
+        {
+          path: 'logs',
+          name: 'logs',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'user',
+              name: 'logs-user',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '用戶操作日誌' }
+            },
+            {
+              path: 'login',
+              name: 'logs-login',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '登入日誌' }
+            }
+          ]
+        },
+        // 數據報表
+        {
+          path: 'reports',
+          name: 'reports',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'user',
+              name: 'reports-user',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '用戶報表' }
+            },
+            {
+              path: 'order',
+              name: 'reports-order',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '訂單報表' }
+            }
+          ]
+        },
+        // 系統設置
         {
           path: 'settings',
           name: 'settings',
-          component: () => import('@/views/settings/SettingsView.vue'),
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'base',
+              name: 'settings-base',
+              component: () => import('@/views/settings/SettingsView.vue'),
+              meta: { requiresAuth: true, title: '基本設置' }
+            },
+            {
+              path: 'security',
+              name: 'settings-security',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '安全設置' }
+            }
+          ]
         },
+        // 個人中心
         {
           path: 'profile',
           name: 'profile',
-          component: () => import('@/views/profile/ProfileView.vue'),
-          meta: { requiresAuth: true, title: '个人资料' }
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'info',
+              name: 'profile-info',
+              component: () => import('@/views/profile/ProfileView.vue'),
+              meta: { requiresAuth: true, title: '個人資料' }
+            },
+            {
+              path: 'password',
+              name: 'profile-password',
+              component: () => import('@/views/notfound/NotFoundView.vue'),
+              meta: { requiresAuth: true, title: '修改密碼' }
+            }
+          ]
         },
         {
           path: 'notfound',
